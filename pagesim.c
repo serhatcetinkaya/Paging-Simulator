@@ -10,19 +10,38 @@ char *pageLevelTwo(char *binary);
 char *pageOffset(char *binary);
 int binToDecimal(char *binary);
 
+struct physical_address {
+  int *virt_addr;
+};
+typedef struct physical_address PHY_A;
+
 int main(int argc, char *argv[]){
 
-  char *binary = (char *) malloc(sizeof(char)*32);
-  char *pt1 = (char *) malloc(sizeof(char)*10);
-  char *pt2 = (char *) malloc(sizeof(char)*10);
-  char *offset = (char *) malloc(sizeof(char)*12);
-  FILE *fp1 = fopen(argv[1], "r");
-  FILE *fp2 = fopen(argv[2], "r");
-
-
-
-  fclose(fp1);
-  fclose(fp2);
+  char *arg = (char *) argv[1];
+  if (arg[0] != "45"){
+    ///// first parameter is not -r
+    char *binary = (char *) malloc(sizeof(char)*32);
+    char *pt1 = (char *) malloc(sizeof(char)*10);
+    char *pt2 = (char *) malloc(sizeof(char)*10);
+    char *offset = (char *) malloc(sizeof(char)*12);
+    FILE *fp1 = fopen(argv[1], "r");
+    FILE *fp2 = fopen(argv[2], "r");
+    //
+    // page table level 1 array will be **int array of size 1024
+    // page table level 2 array will be *int array of size 1024
+    // page table offset array will be int array of size 4096
+    // physical address table will be PHY_A array of size M*4096
+    // we will parse first 10 digits of binary form of the hex input and
+    // reach the index for page table 1 which will direct us to regarding page table 2,
+    // then parse second 10 digits and reach the index for page table 2 which will
+    // direct us to regarding offset array, then we will parse the last 12 digits to
+    // get a cell in the offset then paging will be done for that cell....
+    //
+    fclose(fp1);
+    fclose(fp2);
+  }else{
+    ////// if the first parameter is -r
+  }
 }
 char *hexToBin(char *buffer){
   char *binary = (char *) malloc(sizeof(char)*32);
