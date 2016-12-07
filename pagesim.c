@@ -18,15 +18,19 @@ typedef struct physical_address PHY_A;
 int main(int argc, char *argv[]){
 
   char *arg = (char *) argv[1];
-  if (arg[0] != "45"){
+  if (arg[0] != 45){
     ///// first parameter is not -r
+    int M = (int) atoi(argv[3]);
+    int frame_array_size = M * 4096;
+    int algo = (int) atoi(argv[6]);
+    int i, j, k;
     char *binary = (char *) malloc(sizeof(char)*32);
     char *pt1 = (char *) malloc(sizeof(char)*10);
     char *pt2 = (char *) malloc(sizeof(char)*10);
     char *offset = (char *) malloc(sizeof(char)*12);
     FILE *fp1 = fopen(argv[1], "r");
     FILE *fp2 = fopen(argv[2], "r");
-    //
+    //--------------------------------------------------------------------
     // page table level 1 array will be **int array of size 1024
     // page table level 2 array will be *int array of size 1024
     // page table offset array will be int array of size 4096
@@ -36,7 +40,38 @@ int main(int argc, char *argv[]){
     // then parse second 10 digits and reach the index for page table 2 which will
     // direct us to regarding offset array, then we will parse the last 12 digits to
     // get a cell in the offset then paging will be done for that cell....
-    //
+    //--------------------------------------------------------------------
+
+    ////// initialization of page tables and offset array.
+    int ***level1 = (int ***) malloc(sizeof(int **)*1024);
+    for (i = 0; i < 1024; i++){
+      int **level2 = (int **) malloc(sizeof(int *)*1024);
+      for (j = 0; j < 1024; j++){
+        int *table = (int *) malloc(sizeof(int)*4096);
+        for (k = 0; k < 4096; k++){
+          table[k] = -1;
+        }
+        level2[j] = table;
+      }
+      level1[i] = level2;
+    }
+
+    ///// initialization of the physical address array
+    PHY_A **frames = (PHY_A **) malloc(sizeof(PHY_A *)*frame_array_size);
+    for (i = 0; i < frame_array_size; i++){
+      PHY_A *node = (PHY_A *) malloc(sizeof(PHY_A));
+      node->virt_addr = -1;
+      frames[i] = node;
+    }
+
+    ///---------------------------------------
+    /// things to do:
+    ///   *test requests for physical addresses without considering page faults
+    ///   *implement LRU and FIFO for selecting victim page in case of page faults
+    ///   *add -r parameter case
+    ///   *run tests
+    ///---------------------------------------
+
     fclose(fp1);
     fclose(fp2);
   }else{
