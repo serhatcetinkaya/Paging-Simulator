@@ -57,8 +57,8 @@ const char *mR()
 
 int main(int argc, char *argv[]){
   char *argument1 = argv[5];
-  if (argument1[0] == 45){
-    printf("-r case\n");
+  if (argument1[0] == 45 && argument1[1] == 114){
+    printf("Testing for 500.000 random input...\n");
     FILE *out = fopen(argv[2], "a");
     LIST *node = malloc(sizeof(struct list));
     node->start = 0;
